@@ -76,7 +76,8 @@ Stave = (function() {
     },
 
     renderSequence: function(noteSequence) {
-      console.log('Rendering2');
+      // TODO Clear existing data
+
 
       this.drawStave();
       this.drawClef(5 * this.heightBetweenLines);
@@ -85,6 +86,9 @@ Stave = (function() {
       var bars = [];
       var notesInBar = [];
 
+      if(noteSequence.length == 0) {
+        return;
+      }
       console.log('Rendering: ' +noteSequence);
       console.log('Space of single duration: ' +spaceOfSingleDuration);
       console.log('Width: ' +this.width +'. Duration: ' +noteSequence.durationOfBar);
