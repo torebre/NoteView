@@ -8,9 +8,13 @@ var $ = require('jquery');
 window.NoteView = function(parentElement, width, height) {
   var noteArea = Raphael(parentElement, width, height);
 
+  // TODO Determine margins dynamically
+  var xMargin = 50;
+  var yMargin = 50;
+
   this.renderGlyph = function() {
     noteArea.rect(0, 0, noteArea.width, noteArea.height);
-    var stave2 = new Stave(noteArea, 0, 0, noteArea.width);
+    var stave2 = new Stave(noteArea, xMargin, yMargin, noteArea.width);
     stave2.renderSequence(notes);
 
     var currentTime = 0;
@@ -29,7 +33,7 @@ window.NoteView = function(parentElement, width, height) {
   this.drawNotes = function(noteSequence) {
     noteArea.clear();
     noteArea.rect(0, 0, noteArea.width, noteArea.height);
-    var stave = new Stave(noteArea, 0, 0, noteArea.width);
+    var stave = new Stave(noteArea, xMargin, yMargin, noteArea.width, noteArea.height);
     stave.renderSequence(noteSequence);
   }
 

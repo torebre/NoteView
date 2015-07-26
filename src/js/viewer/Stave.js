@@ -1,4 +1,5 @@
 var GlyphFactory = require("./GlyphFactory.js");
+var StaveUtilities = require("./StaveUtilities.js");
 
 Stave = (function() {
   function Stave(paper, x, y, width) {
@@ -6,16 +7,22 @@ Stave = (function() {
   }
 
   Stave.prototype = {
-    init: function(paper, x, y, width) {
+    init: function(paper, x, y, width, height) {
       this.paper = paper;
       this.x = x;
       this.y = y;
       this.width = width;
+      this.height = height;
+
 
       this.heightBetweenLines = 12;
       this.scale = 1.0;
       this.glyphScale = 0.05;
       this.noteStart = x;
+
+      // Height and width of a bar before scaling
+      this.unscaledWidth = 300;
+      this.unscaledHeight = 200;
 
       this.shouldDrawClef = true;
       this.idShapeMapping = [];
@@ -26,51 +33,8 @@ Stave = (function() {
       this.drawClef(5 * this.heightBetweenLines);
     },
 
-    getYCoord: function(pitch) {
+    getYCoord: function(octave, notePlacement) {
       var scaledHeight = this.scale * this.heightBetweenLines;
-
-      // TODO Need to change things to make use of octave
-      var octave = Math.floor(pitch/12);
-      var noteWithinOctave = pitch % 12;
-      var notePlacement;
-
-      switch(noteWithinOctave) {
-
-        case 0:
-        case 1:
-        notePlacement = 0;
-       break;
-
-        case 2:
-        case 3:
-        notePlacement = 1;
-      break;
-
-        case 4:
-        notePlacement = 2;
-        break;
-
-        case 5:
-        case 6:
-        notePlacement = 3;
-        break;
-
-        case 7:
-        case 8:
-        notePlacement = 4;
-        break;
-
-        case 9:
-        case 10:
-        notePlacement = 5;
-        break;
-
-        case 11:
-        notePlacement = 6;
-        break;
-      }
-
-      console.log('Pitch: ' +pitch +'. Octave: ' +octave +'. Note placement: ' +notePlacement);
 
       return this.y + (6 - octave) * (scaledHeight * 4) + (2 - notePlacement) * scaledHeight / 2;
     },
@@ -82,29 +46,31 @@ Stave = (function() {
       this.drawStave();
       this.drawClef(5 * this.heightBetweenLines);
       // TODO There is less space available than the total width
-      var spaceOfSingleDuration = this.width / noteSequence.durationOfBar;
+      var spaceOfSingleDuration = this.unscaledWidth / noteSequence.durationOfBar;
       var bars = [];
       var notesInBar = [];
 
-      if(noteSequence.length == 0) {
+      if (noteSequence.length == 0) {
         return;
       }
-      console.log('Rendering: ' +noteSequence);
-      console.log('Space of single duration: ' +spaceOfSingleDuration);
-      console.log('Width: ' +this.width +'. Duration: ' +noteSequence.durationOfBar);
+      console.log('Rendering: ' + noteSequence);
+      console.log('Space of single duration: ' + spaceOfSingleDuration);
+      console.log('Width: ' + this.width + '. Duration: ' + noteSequence.durationOfBar);
 
       for (var i = 0; i < noteSequence.notes.length; i++) {
-          var currentNote = noteSequence.notes[i];
-          if(currentNote.elementType == 'BAR_LINE') {
-            bars.push(notesInBar);
-            notesInBar = [];
-          }
-          notesInBar.push({
-            id: currentNote.id,
-            symbol: GlyphFactory.getGlyph(currentNote.elementType),
-            xCoord: currentNote.cumulativeDuration * spaceOfSingleDuration,
-            yCoord: this.getYCoord(currentNote.pitch)
-          });
+        var currentNote = noteSequence.notes[i];
+        if (currentNote.elementType == 'BAR_LINE') {
+          bars.push(notesInBar);
+          notesInBar = [];
+        }
+
+        notesInBar.push({
+          id: currentNote.id,
+          symbol: GlyphFactory.getGlyph(currentNote.elementType),
+          xCoord: currentNote.cumulativeDuration * spaceOfSingleDuration,
+          // TODO Need to change things to make use of octave
+          placement: StaveUtilities.getNoteLinePlacement(currentNote.pitch)
+        });
       }
 
       // TODO Render all bars
@@ -114,10 +80,10 @@ Stave = (function() {
     drawStave: function() {
       var scaledHeight = this.scale * this.heightBetweenLines;
       for (var i = 0; i < 5; ++i) {
-        this.paper.path("M" + this.x + " " + (this.y + i * scaledHeight) + "h" + this.width);
+        this.paper.path("M" + this.x + " " + (this.y + i * scaledHeight) + "h" + this.unscaledWidth);
       }
       this.paper.path("M" + this.x + " " + this.y + "v" + (4 * scaledHeight));
-      this.paper.path("M" + (this.x + this.width) + " " + this.y + "v" + (4 * scaledHeight));
+      this.paper.path("M" + (this.x + this.unscaledWidth) + " " + this.y + "v" + (4 * scaledHeight));
     },
 
     drawClef: function(height) {
@@ -144,7 +110,7 @@ Stave = (function() {
 
       this.addToNoteStart(glyph.getBBox().width);
 
-      console.log('Bounding box: ' +glyph.getBBox());
+      console.log('Bounding box: ' + glyph.getBBox());
       console.log("Center: " + center.x + ", " + center.y);
     },
 
@@ -161,31 +127,29 @@ Stave = (function() {
     },
 
     drawScaledNoteAtPosition: function(glyphPath, xPos, yPos, scale) {
-        var path = this.paper.path(glyphPath);
-        path.transform("...s" + scale + "," + scale + ",0,0");
-        var scaledBox = GlyphFactory.getScaledBoundingBox(scale);
-
-        console.log("Width: " +scaledBox.width +". Height: " +scaledBox.height);
-
-        path.transform("...T" + (xPos - scaledBox.width / 2) + "," + (yPos - scaledBox.height / 2));
-        return path;
+      var path = this.paper.path(glyphPath);
+      path.transform("...s" + scale + "," + scale + ",0,0");
+      var scaledBox = GlyphFactory.getScaledBoundingBox(scale);
+      path.transform("...T" + (xPos - scaledBox.width / 2) + "," + (yPos - scaledBox.height / 2));
+      return path;
     },
 
     drawNotes: function(notes) {
       // TODO Available space for notes is not equal to width
-      var space = this.width;
-      var currentX = 0; //this.x;
+      var space = this.unscaledWidth;
+      var currentX = 0;
 
       for (var i = 0; i < notes.length; ++i) {
         console.log("Drawing note: " + notes[i]);
         var noteHeadOutline = notes[i].symbol;
 
-        if(!noteHeadOutline) {
+        if (!noteHeadOutline) {
           continue;
         }
 
         var xOffset = this.getNoteStart();
-        var path = this.drawScaledNoteAtPosition(noteHeadOutline, xOffset + notes[i].xCoord, notes[i].yCoord, this.glyphScale);
+        var yCoord = this.getYCoord(notes[i].placement.octave, notes[i].placement.notePlacement);
+        var path = this.drawScaledNoteAtPosition(noteHeadOutline, xOffset + notes[i].xCoord, yCoord, this.glyphScale);
         // path.transform("...s" + this.glyphScale + "," + this.glyphScale + ",0,0");
         // path.transform("...T" + (xOffset + notes[i].xCoord) + "," + notes[i].yCoord);
         path.attr("fill", "black");
@@ -194,8 +158,29 @@ Stave = (function() {
 
         var circle = this.paper.circle(0, 0, 50);
         circle.transform("...s" + this.glyphScale + "," + this.glyphScale + ",0,0");
-        circle.transform("...T" + (xOffset + notes[i].xCoord) + "," + notes[i].yCoord);
+        circle.transform("...T" + (xOffset + notes[i].xCoord) + "," + yCoord);
         circle.attr("fill", "red");
+
+        this.drawExtraLines(xOffset + notes[i].xCoord, notes[i].placement.octave, notes[i].placement.notePlacement);
+      }
+    },
+
+    drawExtraLines: function(xCoord, octave, notePlacement) {
+      var line = octave * 6 + notePlacement;
+      var scaledHeight = this.scale * this.heightBetweenLines;
+      var lineCounter = 1;
+
+      if (line < 31) {
+        for (var current = 30; current >= line; current = current - 2) {
+          this.paper.path("M" + (xCoord - 15) + " " + (this.y + (4 + lineCounter) * scaledHeight) + "h" + 30);
+          ++lineCounter;
+        }
+      } else if (line > 45) {
+        for (var current = 46; current <= line; current = current + 2) {
+          // TODO There should be a check somewhere to prevent from getting negative y-coordinates
+          this.paper.path("M" + (xCoord - 15) + " " + (this.y - lineCounter * scaledHeight) + "h" + 30);
+          ++lineCounter;
+        }
       }
     },
 
