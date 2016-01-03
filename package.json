@@ -7,11 +7,11 @@
     "grunt-contrib-jshint": "~0.10.0",
     "grunt-contrib-less": "~0.12.0",
     "grunt-contrib-watch": "^0.6.1",
+    "grunt-wiredep": "^2.0.0",
     "node-raphael": "^0.2.0",
     "raphael": "^2.1.0",
     "tape": "^3.0.3"
   },
-
   "jshintConfig": {
     "multistr": true,
     "asi": true
