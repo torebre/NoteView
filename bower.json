@@ -1,0 +1,20 @@
+{
+  "name": "noteView",
+  "version": "0.0.0",
+  "homepage": "https://github.com/torebre/NoteView",
+  "authors": [
+    "Tore Brede <tore.brede@gmail.com>"
+  ],
+  "main": "build/ts_out/noteView.js",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "raphael.js": "~2.1.4"
+  }
+}

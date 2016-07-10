@@ -1,5 +1,4 @@
-//var GlyphFactory = require("./GlyphFactory.js");
-//var StaveUtilities = require("./StaveUtilities.js");
+import {Component, Inject, Input, OnInit, ElementRef} from "angular2/core";
 
 
 class Stave {

@@ -1,5 +1,0 @@
-{
-  "compilerOptions": {
-    "out": "../../build/ts_out/noteView.js"
-  }
-}
