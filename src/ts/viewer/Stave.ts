@@ -1,7 +1,7 @@
-import {Component, Inject, Input, OnInit, ElementRef} from "angular2/core";
+import {GlyphFactory} from "./GlyphFactory";
 
 
-class Stave {
+export class Stave {
     private heightBetweenLines: number = 12;
     private scale: number = 1.0;
     private glyphScale: number = 0.05;
@@ -19,6 +19,9 @@ class Stave {
                 private width: number, private height: number) {
         this.noteStart = x;
     }
+
+
+
 
         render() {
             this.drawStave();
