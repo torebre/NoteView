@@ -2,7 +2,7 @@
   Collection of utility methods used when drawing the notes.
 
 **/
-  class StaveUtilities {
+  export class StaveUtilities {
 
 
     static getNoteLinePlacement(pitch:number) {
@@ -10,7 +10,7 @@
 
         var octave = Math.floor(pitch / 12);
         var noteWithinOctave = pitch % 12;
-        var notePlacement;
+        var notePlacement: number;
 
         switch (noteWithinOctave) {
             case 0:

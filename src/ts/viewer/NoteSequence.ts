@@ -1,15 +1,14 @@
+import {Note} from "./Note";
 
 
-class NoteSequence {
+export class NoteSequence {
+    durationOfBar: number;
+    notes: Array<Note>
+
 
     constructor() {
 
-
     }
-
-
-
-
 
 
 }

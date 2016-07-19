@@ -2,9 +2,6 @@ import {AllGlyphs} from "./AllGlyphs";
 import {GlyphFactory} from "./viewer/GlyphFactory";
 
 
-console.log("Test21");
-
-
 function drawGlyphs() {
     var startX = 100;
     var currentY = 300;

@@ -1,9 +1,6 @@
-import Font from './viewer/Font';
-
-// var Raphael = require('raphael');
-// var GlyphFactory = require("../viewer/GlyphFactory.js");
-// var Font = require("../viewer/Font.js");
-// var Font = require("./all_glyphs.js");
+import {Font} from './viewer/Font';
+import {GlyphFactory} from "./viewer/GlyphFactory";
+import {AllGlyphs} from "./AllGlyphs";
 
 
 // Test stave
@@ -21,15 +18,15 @@ console.log('Font: ' +Font.length);
 for (var i = 0; i < Font.length; ++i) {
     console.log("Test" + i);
 
-    var glyphArea = Raphael(currentX, currentY, scaledBoundedBox.width, scaledBoundedBox.height);
+    var glyphArea:RaphaelPaper = Raphael(currentX, currentY, scaledBoundedBox.width, scaledBoundedBox.height);
     var rect = glyphArea.rect(0, 0, scaledBoundedBox.width, scaledBoundedBox.height);
-    glyphArea.text(50, 10, Font[i].name);
+    glyphArea.text(50, 10, AllGlyphs.GLYPH_ARRAY[i].name);
 
-    var glyphPath = Font[i].d;
+    var glyphPath = AllGlyphs.GLYPH_ARRAY[i].d;
     var path = glyphArea.path(glyphPath);
     path.transform("s" + scale + "," + scale + ",0,0");
 
-    var circle = glyphArea.circle(0.5 * scaledBoundedBox.width, 0.5 * scaledBoundedBox.height, 2, 2);
+    var circle = glyphArea.circle(0.5 * scaledBoundedBox.width, 0.5 * scaledBoundedBox.height, 2);
     circle.attr("fill", "red");
 
     currentX += scaledBoundedBox.width;

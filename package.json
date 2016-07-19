@@ -2,13 +2,17 @@
   "devDependencies": {
     "bower": "^1.7.9",
     "bower-config": "file:bower-config",
+    "browserify": "^13.0.1",
     "gulp": "^3.9.1",
     "gulp-bower": "0.0.13",
     "gulp-bower-files": "^0.2.7",
+    "gulp-typescript": "^2.13.6",
     "main-bower-files": "^2.13.1",
     "node-raphael": "^0.2.0",
     "raphael": "^2.1.0",
     "tape": "^3.0.3",
+    "tsify": "^1.0.1",
+    "vinyl-source-stream": "^1.1.0",
     "wiredep": "^4.0.0"
   },
   "jshintConfig": {

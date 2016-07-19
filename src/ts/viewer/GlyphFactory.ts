@@ -1,11 +1,12 @@
 import {Font} from "./Font";
+import {GlyphType} from "./GlyphType";
+
 
 export class GlyphFactory {
 
-    // static getGlyph(glyphType: GlyphType, scale: number = 1.0) {
-    //     var glyph = Font[glyphType];
-    //     return typeof glyph === "undefined" ? null : glyph.d;
-    // };
+    static getGlyph(glyphType: GlyphType, scale: number = 1.0): string {
+        return Font.getPath(glyphType);
+    };
 
     static getBoundingBox() {
         return {

@@ -1,7 +1,8 @@
 {
   "compilerOptions": {
-    "module": "system",
-    "moduleResolution": "node",
+    // Using system here seems to cause problem loading the module prepared by browserify in a script-tag.
+    // If no module is set TypeScript defaults to CommonJs
+//    "module": "system",
     "target": "ES5",
     "experimentalDecorators": true,
     "noImplicitAny": true,

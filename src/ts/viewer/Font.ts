@@ -1,3 +1,6 @@
+import {GlyphType} from "./GlyphType";
+
+
 /*
  Glyph data comes from Simon Tatham's Gonville font
 
@@ -9,7 +12,7 @@ export class Font {
     static boundingBox = [-510.142, -1487.78, 852.632, 1370.06];
 
 
-    getPath(glyphType:GlyphType):string {
+    static getPath(glyphType:GlyphType):string {
 
         switch (glyphType) {
             case GlyphType.G_CLEF:
