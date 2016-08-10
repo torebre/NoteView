@@ -5,6 +5,9 @@ import {GlyphType} from "./GlyphType";
 export class GlyphFactory {
 
     static getGlyph(glyphType: GlyphType, scale: number = 1.0): string {
+
+        console.log("Getting glyph: " +glyphType);
+
         return Font.getPath(glyphType);
     };
 

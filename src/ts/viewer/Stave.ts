@@ -36,6 +36,10 @@ export class Stave {
         return this.y + (6 - octave) * (scaledHeight * 4) + (2 - notePlacement) * scaledHeight / 2;
     }
 
+    // renderSequence(notesequence:string) {
+    //     this.renderSequence((NoteSequence)notesequence)
+    // }
+
     renderSequence(noteSequence:NoteSequence) {
         // TODO Clear existing data
 
@@ -52,15 +56,18 @@ export class Stave {
         console.log('Rendering: ' + noteSequence);
         console.log('Space of single duration: ' + spaceOfSingleDuration);
         console.log('Width: ' + this.width + '. Duration: ' + noteSequence.durationOfBar);
-
-        var placement = StaveUtilities.getNoteLinePlacement(currentNote.pitch);
+        console.log('Notes: ' +noteSequence.notes.length);
 
         for (var i = 0; i < noteSequence.notes.length; i++) {
             var currentNote = noteSequence.notes[i];
-            if (currentNote.elementType == GlyphType.BAR_LINE) {
+            if (currentNote.elementType == "BAR_LINE") { //GlyphType.BAR_LINE) {
                 bars.push(notesInBar);
                 notesInBar = [];
             }
+
+            var placement = StaveUtilities.getNoteLinePlacement(currentNote.pitch);
+
+            console.log("Glyph: " +GlyphFactory.getGlyph(currentNote.elementType));
 
             notesInBar.push(new RenderNote(
                 currentNote.id,
@@ -69,6 +76,10 @@ export class Stave {
                 placement.notePlacement,
                 placement.octave
             ));
+        }
+
+        if(notesInBar.length != 0) {
+            bars.push(notesInBar);
         }
 
         // TODO Render all bars
@@ -86,7 +97,7 @@ export class Stave {
 
     drawClef(height:number) {
         // TODO Just testing with a G-clef now
-        var glyphOutline = GlyphFactory.getGlyph(GlyphType.G_CLEF);
+        var glyphOutline = GlyphFactory.getGlyph("G_CLEF"); // GlyphFactory.getGlyph(GlyphType.G_CLEF);
         var glyph = this.paper.path(glyphOutline);
 
         console.log("x: " + this.x + ". y: " + this.y);
@@ -137,9 +148,13 @@ export class Stave {
         var space = this.unscaledWidth;
         var currentX = 0;
 
+        console.log("Notes to render: " +notes);
+
         for (var i = 0; i < notes.length; ++i) {
             console.log("Drawing note: " + notes[i]);
             var noteHeadOutline = notes[i].symbol;
+
+            console.log("Symbol: " +noteHeadOutline);
 
             if (!noteHeadOutline) {
                 continue;

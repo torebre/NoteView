@@ -1,14 +1,14 @@
 import {Note} from "./Note";
 
 
-export class NoteSequence {
+export interface NoteSequence {
     durationOfBar: number;
     notes: Array<Note>
 
 
-    constructor() {
-
-    }
+    // constructor(inputData:string) {
+    //
+    // }
 
 
 }

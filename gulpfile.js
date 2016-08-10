@@ -27,11 +27,12 @@ gulp.task("default", ["copy-html"], function () {
     return browserify({
         basedir: '.',
         debug: true,
-        entries: ['src/ts/viewer/Stave.ts'],
+        entries: ['src/ts/viewer/Stave.ts', 'src/ts/viewer/NoteViewer.ts'],
         cache: {},
         packageCache: {}
     })
         .require('./src/ts/viewer/Stave.ts', {expose: 'Stave'})
+        .require('./src/ts/viewer/NoteViewer.ts', {expose: 'NoteViewer'})
         .plugin(tsify)
         .bundle()
         .pipe(source('bundle.js'))
