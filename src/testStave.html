@@ -9,96 +9,12 @@
 </head>
 <body>
 
-<script>
-    var StaveModule = require('Stave');
-    var paper = Raphael(10, 50, 320, 200);
-    var stave2 = new StaveModule.Stave(paper, 10, 10, 10, 10);
-    stave2.drawClef(100);
-</script>
-
 <br/>
-<div id="note-view">
-
-</div>
+<div id="note-view"/>g
 
 <script>
-    var testSequence = {
-        "clef": "TREBLE",
-        "timeSignatureNominator": 4,
-        "timeSignatureDenominator": 4,
-        "notes": [{
-            "id": 0,
-            "pitch": 60,
-            "cumulativeDuration": 0,
-            "elementType": "HALFNOTE"
-        }, {
-            "id": 1,
-            "pitch": 64,
-            "cumulativeDuration": 2,
-            "elementType": "HALFNOTE"
-        }, {
-            "id": 2,
-            "pitch": -1,
-            "cumulativeDuration": 0,
-            "elementType": "BAR_LINE"
-        }, {
-            "id": 3,
-            "pitch": 62,
-            "cumulativeDuration": 0,
-            "elementType": "QUARTERNOTE"
-        }, {
-            "id": 4,
-            "pitch": 61,
-            "cumulativeDuration": 1,
-            "elementType": "QUARTERNOTE"
-        }, {
-            "id": 5,
-            "pitch": 60,
-            "cumulativeDuration": 2,
-            "elementType": "HALFNOTE"
-        }, {
-            "id": 6,
-            "pitch": -1,
-            "cumulativeDuration": 0,
-            "elementType": "BAR_LINE"
-        }, {
-            "id": 7,
-            "pitch": 70,
-            "cumulativeDuration": 0,
-            "elementType": "HALFNOTE"
-        }, {
-            "id": 8,
-            "pitch": 69,
-            "cumulativeDuration": 2,
-            "elementType": "HALFNOTE"
-        }, {
-            "id": 9,
-            "pitch": -1,
-            "cumulativeDuration": 0,
-            "elementType": "BAR_LINE"
-        }, {
-            "id": 10,
-            "pitch": 66,
-            "cumulativeDuration": 0,
-            "elementType": "HALFNOTE"
-        }, {
-            "id": 11,
-            "pitch": 62,
-            "cumulativeDuration": 2,
-            "elementType": "HALFNOTE"
-        }, {
-            "id": 12,
-            "pitch": -1,
-            "cumulativeDuration": 0,
-            "elementType": "BAR_LINE"
-        }, {
-            "id": 13,
-            "pitch": 64,
-            "cumulativeDuration": 0,
-            "elementType": "QUARTERNOTE"
-        }],
-        "durationOfBar": 4
-    }
+//    var testSequence = "{\"clef\":\"TREBLE\",\"timeSignatureNominator\":4,\"timeSignatureDenominator\":4,\"notes\":[{\"id\":1,\"pitch\":64,\"startWithinBar\":1,\"elementType\":\"HALFNOTE\",\"durationWithinBar\":4,\"velocity\":127}],\"durationOfBar\":4,\"tempoInMillisecondsPerQuarterNote\":0}";
+var testSequence = "{\"clef\":\"TREBLE\",\"timeSignatureNominator\":4,\"timeSignatureDenominator\":4,\"notes\":[{\"id\":0,\"pitch\":60,\"startWithinBar\":0,\"elementType\":\"HALFNOTE\",\"durationWithinBar\":2,\"joinNext\":false,\"velocity\":127},{\"id\":1,\"pitch\":52,\"startWithinBar\":2,\"elementType\":\"QUARTERNOTE\",\"durationWithinBar\":1,\"joinNext\":false,\"velocity\":127},{\"id\":2,\"pitch\":44,\"startWithinBar\":3,\"elementType\":\"HALFNOTE\",\"durationWithinBar\":2,\"joinNext\":false,\"velocity\":127},{\"id\":3,\"pitch\":40,\"startWithinBar\":1,\"elementType\":\"HALFNOTE\",\"durationWithinBar\":2,\"joinNext\":false,\"velocity\":127},{\"id\":4,\"pitch\":36,\"startWithinBar\":3,\"elementType\":\"QUARTERNOTE\",\"durationWithinBar\":1,\"joinNext\":false,\"velocity\":127}],\"durationOfBar\":4,\"tempoInMillisecondsPerQuarterNote\":1000}";
 
     var w = window,
             d = document,
@@ -107,13 +23,11 @@
             x = w.innerWidth || e.clientWidth || g.clientWidth,
             y = w.innerHeight|| e.clientHeight|| g.clientHeight;
 
-    console.log("x: " +x);
-
     var NoteViewerModule = require('NoteViewer');
     var noteView = new NoteViewerModule.NoteViewer("note-view", x, (2/3) * x);
-    noteView.drawNotes(testSequence);
-
+    noteView.drawNotes(JSON.parse(testSequence));
 </script>
 
 </body>
+
 </html>

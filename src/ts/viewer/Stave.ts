@@ -9,7 +9,8 @@ export class Stave {
     private heightBetweenLines:number = 12;
     private scale:number = 1.0;
     private glyphScale:number = 0.05;
-    private noteStart:number;
+
+    private noteStart:number = 0;
 
 // Height and width of a bar before scaling
     private unscaledWidth:number = 300;
@@ -43,6 +44,8 @@ export class Stave {
     renderSequence(noteSequence:NoteSequence) {
         // TODO Clear existing data
 
+        console.log("Note sequence: " +noteSequence);
+
         this.drawStave();
         this.drawClef(5 * this.heightBetweenLines);
         // TODO There is less space available than the total width
@@ -67,12 +70,12 @@ export class Stave {
 
             var placement = StaveUtilities.getNoteLinePlacement(currentNote.pitch);
 
-            console.log("Glyph: " +GlyphFactory.getGlyph(currentNote.elementType));
+            // console.log("Glyph: " +GlyphFactory.getGlyph(currentNote.elementType));
 
             notesInBar.push(new RenderNote(
                 currentNote.id,
                 GlyphFactory.getGlyph(currentNote.elementType),
-                currentNote.cumulativeDuration * spaceOfSingleDuration,
+                currentNote.durationWithinBar * spaceOfSingleDuration,
                 placement.notePlacement,
                 placement.octave
             ));
@@ -151,11 +154,8 @@ export class Stave {
         console.log("Notes to render: " +notes);
 
         for (var i = 0; i < notes.length; ++i) {
-            console.log("Drawing note: " + notes[i]);
+            console.log("Drawing note: " + notes[i].symbol);
             var noteHeadOutline = notes[i].symbol;
-
-            console.log("Symbol: " +noteHeadOutline);
-
             if (!noteHeadOutline) {
                 continue;
             }
@@ -173,7 +173,6 @@ export class Stave {
             circle.transform("...s" + this.glyphScale + "," + this.glyphScale + ",0,0");
             circle.transform("...T" + (xOffset + notes[i].xCoord) + "," + yCoord);
             circle.attr("fill", "red");
-
             this.drawExtraLines(xOffset + notes[i].xCoord, notes[i].octave, notes[i].placement);
         }
     }
@@ -185,16 +184,19 @@ export class Stave {
 
         if (line < 31) {
             for (var current = 30; current >= line; current = current - 2) {
-                this.paper.path("M" + (xCoord - 15) + " " + (this.y + (4 + lineCounter) * scaledHeight) + "h" + 30);
+                var path = "M" + (xCoord - 15) + " " + (this.y + (4 + lineCounter) * scaledHeight) + "h" + 30;
+                this.paper.path(path);
                 ++lineCounter;
             }
         } else if (line > 45) {
             for (var current = 46; current <= line; current = current + 2) {
                 // TODO There should be a check somewhere to prevent from getting negative y-coordinates
-                this.paper.path("M" + (xCoord - 15) + " " + (this.y - lineCounter * scaledHeight) + "h" + 30);
+                var path = "M" + (xCoord - 15) + " " + (this.y - lineCounter * scaledHeight) + "h" + 30;
+                this.paper.path(path);
                 ++lineCounter;
             }
         }
+
     }
 
     getDrawClef() {
